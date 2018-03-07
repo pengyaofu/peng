@@ -1,0 +1,115 @@
+获取userDetails
+UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+    .getAuthentication()
+    .getPrincipal();
+xxx =userDetails.getXXX();
+zdys框架里获取 ：
+ContextUtil.getCurrentUser()
+
+
+common.js 定义了一些常用js  Common.showBySite('温馨提示', '操作失败！','icon-failed');
+
+下拉
+<input class="easyui-combotree" data-options="url:'${CONTEXT_ROOT}/commonCtr/getTreeJsonData?autoId=1001&multilevel=false',method:'get',required:true"
+ style="width:310px;" id="moduleid" name="moduleid" value="${select.moduleid}">
+
+$('#resultTree').tree({
+		url: '${CONTEXT_ROOT}/commonCtr/getTreeJsonData',
+		lines:true,
+		onBeforeLoad:function(node,param){
+			param.autoId="1001";
+			param.multilevel="false";
+		},
+		onClick:function(node){
+			treeClick(node);
+		}
+	});
+
+autoId 为下拉id，multilevel为展开层级，multilevel= false,ture,数字,默认2级，
+$2 : refer
+...
+$5 : refer3
+
+$currUserId
+$currDeptId
+$curUnitId
+---------------------------------------
+
+entity配置
+
+@Entity
+@Table(name = "sys_autohitselect")
+public class AutoSelect implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
+
+	@Id  
+    	@GeneratedValue(generator="system-uuid")  
+    	@GenericGenerator(name = "system-uuid",strategy="uuid")
+	private String id; //主键ID,使用uuid
+	
+	/* 
+	@Id
+	@Column(name = "ID",length = 32, nullable = true)//ID为数据库字段，其实与数据库间不		区分大小写
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+	private Integer id; //主键ID，唯一（IDENTITY）
+	*/
+
+	@Column(name = "STRINITSQL",length=300)
+	private String initsql; //用户名
+
+	。。。。。。。
+  
+   }
+
+
+createQuery("from AutoSelect")//执行hql，hibernate 操作的是对象，所以这里指的是AutoSelect                                 对象
+
+createSqlQuery(sql)//这里是执行sql
+
+@Controller @Service @Repository 
+
+@ResponseBody//处理数据，json和对象间数据的转换
+
+@RequestParam(value = "id",defaultValue = "" ,required = true) String id 
+// 用来读取参数 value 为前台传参数名，defaultValue 为默认值，required 为前台传参一定要有该参
+--------------------------------
+
+1、AutoSelect select = session.get(AutoSelect.class,id); //get方法通过主键查找数据返回，                                                        AutoSelect 对象
+2、update(select);
+
+3、save(select);
+
+4、List<AutoSelect> list = session.createQuery("from AutoSelect").list();
+
+5、List<AutoSelect> list = session.createSQLQuery(sql.toString()).setResultTransformer(Transformers.aliasToBean(AutoSelect.class));
+
+//这种方式可以省去建类
+6、List<Map<String,Object>> listData = getCurrentSession().createSQLQuery(sql.toString())
+				.setFirstResult(pageUI.getPageStart())
+				.setMaxResults(pageUI.getPageSize())
+				.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
+
+
+---------------------
+uniqueResult()
+当确定返回一条数据或无数据可用，不然报错
+Long long = (Long)query.uniqueResult();
+uniqueResult的返回值看不懂，返回的应该是object类型但是报BigInteger无法强转Long
+所以做了如下处理：
+BigInteger totalrecord = (BigInteger)query.uniqueResult();
+query.setTotalrecord(totalrecord.longValue());
+
+
+
+-------------------------------
+
+easyui 经常会用到href属性，如window 的href : baseUrl
+						+ '/Manager/view/BasicData/dic/dicTypeInfo.jsp',
+
+href在引用时是将这个jsp的html标签引用到自己的界面，相当于dicTypeInfo.jsp与引用它的界面在同一个界面，所以可以省略js即css等的引用，而且因为是同一个界面，所以html、body标签就要去掉，不然会出问题（如我在dicTypeInfo.jsp里写的js它自己调用不到）
+
+
+-----------------------------
+
+
